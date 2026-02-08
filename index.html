@@ -397,10 +397,55 @@
     <div id="toastContainer" class="toast-container"></div>
 
     <!-- Firebase SDK -->
-    <script type="module" src="firebase-config.js?v=2"></script>
-<script type="module" src="app.js"></script>
+    <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    // СИЗНИНГ ТЎҒРИ КОНФИГУРАЦИЯНГИЗ
+    const firebaseConfig = {
+        apiKey: "AIzaSyDPIrieoenqtwzD2A-QzxHknztZKtOaf18",
+        authDomain: "bigsport-crm.firebaseapp.com",
+        projectId: "bigsport-crm",
+        storageBucket: "bigsport-crm.firebasestorage.app",
+        messagingSenderId: "645659654481",
+        appId: "1:645696694481:web:e65a139cb67e68b8787df0",
+        measurementId: "G-RKSKY82609"
+    };
+    // Firebase ни ишга тушириш
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    console.log("🔥 Firebase HTML ичида ишга тушди!");
+    // Глобал қилиб қўямиз, бошқа файллар ишлатиши учун
+    window.auth = auth;
+    window.db = db;
+    window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+    window.signOut = signOut;
+    // Login логикаси (Тўғридан-тўғри шу ерда!)
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                console.log("✅ Киришилди!");
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+            } catch (error) {
+                console.error("Login хатоси:", error);
+                alert("Хато: " + error.message);
+            }
+        });
+    }
+</script>
+<!-- Эски app.js ни ҳам қўшиб қўямиз, қолган нарсалар учун -->
+<script src="app.js"></script>
 </body>
 </html>
+
 
 
 
